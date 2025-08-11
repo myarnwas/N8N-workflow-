@@ -1,0 +1,316 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4c932a1a-4d01-43ff-852e-3b1ed5f94e0a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://rapidapi.com/herosAPI/api/google-search74/playground/apiendpoint_686fbd00-89fa-409e-ae73-c0c5321e32c5",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "{\n  \"brand\": \"Nike\",\n  \"description\": \"Nike Inc. هي شركة أمريكية عالمية لصناعة معدات الرياضة تأسست عام 1964، يقع مقرها في بيفرتون، أوريغون. تُعد الشركة الرائدة عالميًا في مجال الأحذية والملابس الرياضية.\",\n  \"wikipedia_url\": \"https://de.wikipedia.org/wiki/Nike_(Unternehmen)\",\n  \"image\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:m8TS_7lVuPlJlM\",\n  \"contact\": {\n    \"customer_service\": \"1 (800) 806-6453\"\n  },\n  \"financials\": {\n    \"revenue\": \"37.4 مليار دولار\"\n  },\n  \"headquarters\": \"بيفرتون، أوريغون\",\n  \"founders\": [\n    \"فيليب نايت\",\n    \"بيل باورمان\"\n  ],\n  \"ceo\": \"جون دوناهو (من 13 يناير 2020)\",\n  \"subsidiaries\": [\n    \"Converse\",\n    \"Nike Vision\",\n    \"Jordan Brand\"\n  ],\n  \"foundation_date\": \"25 يناير 1964\",\n  \"official_links\": {\n    \"website\": \"https://www.nike.com/\",\n    \"instagram\": \"https://www.instagram.com/nike/?hl=de\",\n    \"twitter\": \"https://twitter.com/nike\",\n    \"youtube\": \"https://www.youtube.com/user/nike\",\n    \"facebook\": \"https://de-de.facebook.com/nike/\",\n    \"linkedin\": \"https://www.linkedin.com/company/nike\"\n  },\n  \"related_keywords\": [\n    \"nike\",\n    \"nike air force 1\",\n    \"nike schuhe\",\n    \"nike dunk low\",\n    \"nike air max\",\n    \"nike jordan\",\n    \"nike tech fleece\",\n    \"nike phantom gx\"\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        336,
+        -160
+      ],
+      "id": "c6fccd48-7616-43d9-b378-5a83877ee225",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Hello mayar",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Using the following JSON data about Nike:\n\n{\n  \"search_term\": \"Nike\",\n  \"knowledge_panel\": {\n    \"name\": \"Nike\",\n    \"label\": \"Company\",\n    \"description\": {\n      \"text\": \"Nike Inc. is an American multinational corporation founded in 1964 and officially named in 1971, engaged in the design, development, manufacturing, and worldwide marketing and sales of sportswear, footwear, and equipment. Headquarters in Beaverton, Oregon.\",\n      \"url\": \"https://en.wikipedia.org/wiki/Nike,_Inc.\",\n      \"site\": \"Wikipedia\"\n    },\n    \"info\": [\n      {\"title\": \"CEO\", \"labels\": [\"John Donahoe (since Jan 13, 2020)\"]},\n      {\"title\": \"Founded\", \"labels\": [\"January 25, 1964, Eugene, Oregon\"]},\n      {\"title\": \"Founders\", \"labels\": [\"Philip Knight\", \"Bill Bowerman\"]},\n      {\"title\": \"Revenue\", \"labels\": [\"$37.4 billion USD\"]},\n      {\"title\": \"Headquarters\", \"labels\": [\"Beaverton, Oregon\"]}\n    ]\n  }\n}\n\nCreate:\n1. A short brand overview (max 3 sentences).\n2. 5 creative social media post ideas for Nike’s Instagram, each with engaging captions.\n3. A one-week content plan for Instagram including type of post (image, video, reel, story), main topic, and caption idea.\n4. A list of 10 trending hashtags relevant to Nike.\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1040,
+        -160
+      ],
+      "id": "97839d4f-1342-4657-b7f7-7daa796bb596",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "chatgpt-4o-latest"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        32
+      ],
+      "id": "fe1618e6-c401-4456-94c0-aad28c436bc5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CzmUfVJICHUkrUj1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const content = $json[\"choices\"][0][\"message\"][\"content\"];\nreturn [\n  { json: { facebook: content + \"\\n#YourBrand\" } },\n  { json: { instagram: content.replace(/\\n/g, \"\\n\\n\") + \"\\n📸\" } },\n  { json: { twitter: content.slice(0, 280) } }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        -160
+      ],
+      "id": "5da1f8d4-1122-4133-8fe0-b25fe66b1643",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "chatId": "8288847737:AAHn9-xr6v9CX3Fw6qX82ocWE7KZRyIk8z0"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1808,
+        -160
+      ],
+      "id": "cd3fce51-942b-4b14-98d8-5573d3033824",
+      "name": "Get a chat1",
+      "webhookId": "03a513d0-bbf3-46c2-addd-7800684fa246",
+      "credentials": {
+        "telegramApi": {
+          "id": "YQ0g2Rgz6nz9tf6b",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://web.telegram.org/k/#1467595069",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "likes",
+              "value": "10"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "shared",
+              "value": "5"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "coments",
+              "value": "6"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2016,
+        -160
+      ],
+      "id": "14a1033d-7d27-4951-bf0a-0d5920021903",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "linkedIn",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2224,
+        -160
+      ],
+      "id": "3fbaac4e-de90-4c8d-a727-c206ea77eb24",
+      "name": "Create spreadsheet1",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wreeh1HktKDsF5Nh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const relatedKeywords = items[0].json.related_keywords || [];\n\nreturn relatedKeywords.map(keyword => {\n  return {\n    json: {\n      position: keyword.position,\n      keyword: keyword.keyword\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        64
+      ],
+      "id": "61b13fb4-2cba-4c7b-89d4-4270e26a2b48",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {
+    "Code": [
+      {
+        "json": {
+          "name": "First item",
+          "code": 1
+        }
+      },
+      {
+        "json": {
+          "name": "Second item",
+          "code": 2
+        }
+      }
+    ],
+    "Get a chat1": [
+      {
+        "json": {
+          "name": "First item",
+          "code": 1
+        }
+      },
+      {
+        "json": {
+          "name": "Second item",
+          "code": 2
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Get a chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a chat1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "486842e3-f02e-4122-a486-2a9bff14ef97",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "095dd17663f68761e825c2c1e0439434eb428a1c5ee38f1a19a0c5956a9363fe"
+  },
+  "id": "ppFOVNJyTOzOJ9zH",
+  "tags": []
+}
