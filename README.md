@@ -31,4 +31,7 @@ This project is an Automated Marketing Content Generator built using n8n, design
 	•	Delivered content directly to Telegram.
 	•	Organized storage of data and metrics in Google Sheets.
 
- 
+ ## Check Out My n8n Workflow
+
+[![#n8n](https://img.shields.io/badge/-n8n-orange?style=for-the-badge&logo=n8n&logoColor=white&link=https://mayar1.app.n8n.cloud/workflow/ppFOVNJyTOzOJ9zH)](https://mayar1.app.n8n.cloud/workflow/ppFOVNJyTOzOJ9zH)
+
